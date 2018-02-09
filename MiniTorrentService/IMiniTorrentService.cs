@@ -13,6 +13,7 @@ namespace MiniTorrentService
     [ServiceContract]
     public interface IMiniTorrentService
     {
+
         [OperationContract, WebInvoke(UriTemplate = "signIn", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
         string SignIn(SignInData signInData);
 

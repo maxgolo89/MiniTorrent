@@ -12,9 +12,9 @@ namespace MiniTorrentService
     public class MiniTorrentService : IMiniTorrentService
     {
         /// <summary>
-        /// TO BE IMPLEMENTED
+        /// 
         /// </summary>
-        /// <param name="infoJson"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         public string SignIn(SignInData request)
         {
@@ -24,10 +24,9 @@ namespace MiniTorrentService
         }
 
         /// <summary>
-        /// TO BE IMPLEMENTED
+        /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="infoJson"></param>
         /// <returns></returns>
         public string SignOut(SignOutData request)
         {
@@ -37,9 +36,9 @@ namespace MiniTorrentService
         }
 
         /// <summary>
-        /// TO BE IMPLEMENTED
+        /// 
         /// </summary>
-        /// <param name="infoJson"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         public string Request(RequestData request)
         {
