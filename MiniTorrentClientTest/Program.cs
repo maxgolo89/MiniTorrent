@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using MiniTorrentDAL;
 
 namespace MiniTorrentClientTest
 {
@@ -14,11 +15,19 @@ namespace MiniTorrentClientTest
     {
         public static void Main(string[] args)
         {
+            MiniTorrentDAL.Test.DatabaseTest();
+            Console.WriteLine("Done!");
+            Console.ReadKey();
+        }
+
+
+        public static void RestTest()
+        {
             WebClient request = new WebClient();
             Uri httpUri = new Uri("http://localhost:8090/MiniTorrentService/signIn");
             Uri httpUri2 = new Uri("http://localhost:8090/MiniTorrentService/signOut");
             Uri httpUri3 = new Uri("http://localhost:8090/MiniTorrentService/request");
-            
+
 
             object signInDataJson = new
             {
@@ -26,7 +35,7 @@ namespace MiniTorrentClientTest
                 password = "password",
                 ip = "10.10.10.10",
                 port = "9999",
-                files = new Dictionary<string, int> { { "file_1", 123456789 }, {"file_2", 987654321} } 
+                files = new Dictionary<string, int> { { "file_1", 123456789 }, { "file_2", 987654321 } }
 
             };
 
@@ -70,10 +79,8 @@ namespace MiniTorrentClientTest
             request.Headers.Add(HttpRequestHeader.ContentType, "application/json");
             request.UploadString(httpUri3, "POST", requestSerialize);
 
-            
+
             Console.WriteLine("Requests sent");
-            Console.ReadKey();
         }
-        
     }
 }

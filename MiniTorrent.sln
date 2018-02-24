@@ -9,9 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTorrentClientTest", "Mi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTorrentServiceHost", "MiniTorrentServiceHost\MiniTorrentServiceHost.csproj", "{1935738E-0457-4BF3-9920-F40F302C846B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTorrentDBService", "MiniTorrentDBService\MiniTorrentDBService.csproj", "{C2C221EE-DDF2-4890-A438-813F06A388C6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTorrentDBServiceHost", "MiniTorrentDBServiceHost\MiniTorrentDBServiceHost.csproj", "{580C405C-AB6C-4778-9429-D6CE02A8892E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTorrentDAL", "MiniTorrentDAL\MiniTorrentDAL.csproj", "{BCFC41D2-4DC7-4ED9-AB99-A6C45758B45C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +29,10 @@ Global
 		{1935738E-0457-4BF3-9920-F40F302C846B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1935738E-0457-4BF3-9920-F40F302C846B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1935738E-0457-4BF3-9920-F40F302C846B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2C221EE-DDF2-4890-A438-813F06A388C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2C221EE-DDF2-4890-A438-813F06A388C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2C221EE-DDF2-4890-A438-813F06A388C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2C221EE-DDF2-4890-A438-813F06A388C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{580C405C-AB6C-4778-9429-D6CE02A8892E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{580C405C-AB6C-4778-9429-D6CE02A8892E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{580C405C-AB6C-4778-9429-D6CE02A8892E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{580C405C-AB6C-4778-9429-D6CE02A8892E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCFC41D2-4DC7-4ED9-AB99-A6C45758B45C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCFC41D2-4DC7-4ED9-AB99-A6C45758B45C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCFC41D2-4DC7-4ED9-AB99-A6C45758B45C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCFC41D2-4DC7-4ED9-AB99-A6C45758B45C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
