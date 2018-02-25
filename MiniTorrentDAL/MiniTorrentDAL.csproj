@@ -61,10 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileInformation.cs" />
-    <Compile Include="IMiniTorrentDAL.cs" />
+    <Compile Include="IMiniTorrentDBInterface.cs" />
     <Compile Include="LoggedInUser.cs" />
     <Compile Include="MiniTorrentContext.cs" />
-    <Compile Include="Test.cs" />
+    <Compile Include="MiniTorrentDBInterface.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

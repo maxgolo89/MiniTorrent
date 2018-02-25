@@ -10,11 +10,12 @@ namespace MiniTorrentDAL
 
     public class MiniTorrentContext : DbContext
     {
+        public static readonly string CONNECTION_STRING = "MiniTorrentDBString";
         public DbSet<User> Users { get; set; }
         public DbSet<LoggedInUser> LoggedInUsers { get; set; }
         public DbSet<FileInformation> FilesInformation { get; set; }
 
-        public MiniTorrentContext() : base(nameOrConnectionString: "MiniTorrentDBString")
+        public MiniTorrentContext() : base(nameOrConnectionString: CONNECTION_STRING)
         {
             Database.SetInitializer<MiniTorrentContext>(new CreateDatabaseIfNotExists<MiniTorrentContext>());
         }

@@ -4,7 +4,7 @@ using System.Data;
 
 namespace MiniTorrentDAL
 {
-    public interface IMiniTorrentDAL
+    public interface IMiniTorrentDBInterface
     {
         /// <summary>
         /// Insert new user to user table.
@@ -29,7 +29,7 @@ namespace MiniTorrentDAL
         /// true - success.
         /// false - failed.
         /// </returns>
-        bool InsertUserToLoggedInUser(User user, string sessionId, DateTime timeStamp, string ip, string port, List<FileInformation> files);
+        bool InsertUserToLoggedInUser(User user, string sessionId, DateTime timeStamp, string ip, int port, List<FileInformation> files);
 
         /// <summary>
         /// Remove user from loggedinuser table.

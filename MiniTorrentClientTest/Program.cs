@@ -15,10 +15,67 @@ namespace MiniTorrentClientTest
     {
         public static void Main(string[] args)
         {
-            MiniTorrentDAL.Test.DatabaseTest();
-            Console.WriteLine("Done!");
+            DALTest();
+        }
+
+
+        public static void DALTest()
+        {
+            MiniTorrentDBInterface dal = new MiniTorrentDBInterface();
+
+            // *********************************************************************************
+            // Test InsertNewUser
+            // *********************************************************************************
+            User u1 = new User();
+            u1.Username = "first";
+            u1.Password = "first";
+            var success = dal.InsertNewUser(u1);
+            if(success)
+                Console.WriteLine("Yay!");
+            else
+            {
+                Console.WriteLine("Bummer...");
+            }
+
+            // *********************************************************************************
+            // Test InsertUserToLoggedInUser
+            // *********************************************************************************
+            List<FileInformation> files = new List<FileInformation>();
+            FileInformation file = new FileInformation();
+            file.Name = "SOSO";
+            file.Size = 100000;
+            files.Add(file);
+            var sid = DateTime.Now.ToBinary().ToString();
+
+            foreach (var f in files)
+            {
+                f.SessionId = sid;
+            }
+
+            success = dal.InsertUserToLoggedInUser(u1, DateTime.Now.ToBinary().ToString(), DateTime.Now, "10.0.0.100", 45454,
+                files);
+
+            if (success)
+                Console.WriteLine("Yay!");
+            else
+            {
+                Console.WriteLine("Bummer...");
+            }
+
+            // *********************************************************************************
+            // Test RemoveLoggedInUser
+            // *********************************************************************************
+//            success = dal.RemoveUserFromLoggedInUser(u1);
+            if (success)
+                Console.WriteLine("Yay!");
+            else
+            {
+                Console.WriteLine("Bummer...");
+            }
+
             Console.ReadKey();
         }
+
 
 
         public static void RestTest()
