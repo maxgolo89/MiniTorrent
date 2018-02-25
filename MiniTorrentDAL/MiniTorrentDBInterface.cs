@@ -103,19 +103,19 @@ namespace MiniTorrentDAL
             }
         }
 
-        public FileInformation GetFile(string name)
+        public List<LoggedInUser> GetFileResources(string name)
         {
             using (var db = new MiniTorrentContext())
             {
                 try
                 {
-                    
+                    var fileQuery = from file in db.FilesInformation where file.Name == name select file.LoggedInUser;
                 }
                 catch (Exception e)
                 {
                     ExceptionLogger(e);
                 }
-                return new FileInformation();
+                return null;
             }
         }
 
@@ -138,6 +138,7 @@ namespace MiniTorrentDAL
         {
             throw new NotImplementedException();
         }
+
         private void ExceptionLogger(Exception e)
         {
             StringBuilder output = new StringBuilder();
@@ -152,19 +153,17 @@ namespace MiniTorrentDAL
         {
             try
             {
+                LinkedList<string> sessionIds = new LinkedList<string>();
                 var loggedUserQuery = from loggedUser in db.LoggedInUsers where loggedUser.Username == user.Username select loggedUser;
 
                 if (loggedUserQuery == null)
                     return false;
 
-                
                 foreach (var lu in loggedUserQuery)
                 {
-                    
                     db.LoggedInUsers.Remove(lu);
-                    
                 }
-                
+
                 db.SaveChanges();
                 return true;
 

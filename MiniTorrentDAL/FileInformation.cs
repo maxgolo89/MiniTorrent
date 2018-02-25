@@ -22,6 +22,6 @@ namespace MiniTorrentDAL
         [ForeignKey("LoggedInUser")]
         [Required]
         public string SessionId { get; set; }
-        public virtual List<LoggedInUser> LoggedInUser { get; set; }
+        public virtual LoggedInUser LoggedInUser { get; set; }
     }
 }

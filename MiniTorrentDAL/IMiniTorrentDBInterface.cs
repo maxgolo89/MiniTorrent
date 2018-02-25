@@ -58,7 +58,7 @@ namespace MiniTorrentDAL
         /// <returns>
         /// FileInformation object, contains name, size, and resources.
         /// </returns>
-        FileInformation GetFile(string name);
+        List<LoggedInUser> GetFileResources(string name);
 
         /// <summary>
         /// Get all file informations availble.
