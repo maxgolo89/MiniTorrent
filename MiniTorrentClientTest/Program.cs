@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using MiniTorrentDAL;
+using MiniTorrentDAL.Messeges;
 
 namespace MiniTorrentClientTest
 {
@@ -15,68 +16,115 @@ namespace MiniTorrentClientTest
     {
         public static void Main(string[] args)
         {
-            DALTest();
-        }
-
-
-        public static void DALTest()
-        {
-            MiniTorrentDBInterface dal = new MiniTorrentDBInterface();
-
-            // *********************************************************************************
-            // Test InsertNewUser
-            // *********************************************************************************
-            User u1 = new User();
-            u1.Username = "first";
-            u1.Password = "first";
-            var success = dal.InsertNewUser(u1);
-            if(success)
-                Console.WriteLine("Yay!");
-            else
-            {
-                Console.WriteLine("Bummer...");
-            }
-
-            // *********************************************************************************
-            // Test InsertUserToLoggedInUser
-            // *********************************************************************************
-            List<FileInformation> files = new List<FileInformation>();
-            FileInformation file = new FileInformation();
-            file.Name = "SOSO";
-            file.Size = 100000;
-            files.Add(file);
-            var sid = DateTime.Now.ToBinary().ToString();
-
-            foreach (var f in files)
-            {
-                f.SessionId = sid;
-            }
-
-            success = dal.InsertUserToLoggedInUser(u1, DateTime.Now.ToBinary().ToString(), DateTime.Now, "10.0.0.100", 45454,
-                files);
-
-            if (success)
-                Console.WriteLine("Yay!");
-            else
-            {
-                Console.WriteLine("Bummer...");
-            }
-
-            // *********************************************************************************
-            // Test RemoveLoggedInUser
-            // *********************************************************************************
-//            success = dal.RemoveUserFromLoggedInUser(u1);
-            if (success)
-                Console.WriteLine("Yay!");
-            else
-            {
-                Console.WriteLine("Bummer...");
-            }
-
+            MiniTorrentCrud db = new MiniTorrentCrud();
+//            DALCreateUserTest(db);
+//            DALCreateLoggedInUserTest(db);
+//            DALDeleteLoggedInUserTest(db);
+//            DALUpdateFileList(db);
+//            DALUpdateFileList2(db);
+//            DALReadUser(db);
+//            DALReadFiles(db);
+//            DALReadFile(db);
+//            DALReadLoggedInUser(db);
             Console.ReadKey();
         }
 
 
+        public static void DALCreateUserTest(MiniTorrentCrud db)
+        {
+            
+            db.CreateUser("u1", "u1");
+            db.CreateUser("u2", "u2");
+            db.CreateUser("u3", "u3");
+            db.CreateUser("u4", "u4");
+        }
+
+        public static void DALCreateLoggedInUserTest(MiniTorrentCrud db)
+        {
+            Dictionary<string, int> dict = new Dictionary<string, int>();
+            dict.Add("SOSO", 10000);
+            dict.Add("POPO", 20000);
+            dict.Add("TOTO", 30000);
+
+            db.CreateLoggedInUser("u1", "10.10.10.10", 9999, dict);
+            db.CreateLoggedInUser("u2", "10.10.10.11", 9999, dict);
+        }
+
+        public static void DALDeleteLoggedInUserTest(MiniTorrentCrud db)
+        {
+            db.DeleteLoggedInUser("u1");
+            db.DeleteLoggedInUser("u2");
+        }
+
+        public static void DALUpdateFileList(MiniTorrentCrud db)
+        {
+            Dictionary<string, int> dict = new Dictionary<string, int>();
+            dict.Add("SOSO", 10000);
+            dict.Add("POPO", 20000);
+            dict.Add("TOTO", 30000);
+            dict.Add("MOMO", 40000);
+            dict.Add("KOKO", 50000);
+            db.UpdateFilesForLoggedInUser("u1", dict);
+        }
+
+        public static void DALUpdateFileList2(MiniTorrentCrud db)
+        {
+            Dictionary<string, int> dict = new Dictionary<string, int>();
+            dict.Add("KOKO", 50000);
+            db.UpdateFilesForLoggedInUser("u2", dict);
+        }
+
+        public static void DALReadUser(MiniTorrentCrud db)
+        {
+            Console.WriteLine(db.ReadUser("u1"));
+        }
+
+        public static void DALReadFiles(MiniTorrentCrud db)
+        {
+            List<FileObject> list = db.ReadFiles();
+            if (list != null)
+            {
+                foreach (var file in list)
+                {
+                    Console.WriteLine(file.Name);
+                    Console.WriteLine("**************");
+                    foreach (var resource in file.Resources)
+                    {
+                        Console.WriteLine(resource.Username);
+                    }
+
+                    Console.WriteLine();
+                }
+            }
+        }
+
+        public static void DALReadFile(MiniTorrentCrud db)
+        {
+            FileObject file = db.ReadFile("SOSO");
+            if (file != null)
+            {
+                Console.WriteLine(file.Name);
+                Console.WriteLine("**************");
+                foreach (var resource in file.Resources)
+                {
+                    Console.WriteLine(resource.Username);
+                }
+            }
+        }
+
+        public static void DALReadLoggedInUser(MiniTorrentCrud db)
+        {
+            LoggedInUserObject loggedInUserObject = db.ReadLoggedInUser("u1");
+            if (loggedInUserObject != null)
+            {
+                Console.WriteLine(loggedInUserObject.Username);
+                Console.WriteLine("**************");
+                foreach (var file in loggedInUserObject.files)
+                {
+                    Console.WriteLine(file.Name);
+                }
+            }
+        }
 
         public static void RestTest()
         {

@@ -60,18 +60,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileInformation.cs" />
-    <Compile Include="IMiniTorrentDBInterface.cs" />
-    <Compile Include="LoggedInUser.cs" />
+    <Compile Include="Entities\FileEntity.cs" />
+    <Compile Include="IMiniTorrentCrud.cs" />
+    <Compile Include="Entities\LoggedInUserEntity.cs" />
+    <Compile Include="Messeges\FileObject.cs" />
+    <Compile Include="Messeges\LoggedInUserObject.cs" />
+    <Compile Include="Messeges\UserObject.cs" />
     <Compile Include="MiniTorrentContext.cs" />
-    <Compile Include="MiniTorrentDBInterface.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="MiniTorrentCrud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Entities\UserEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
