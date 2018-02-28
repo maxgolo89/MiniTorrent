@@ -16,7 +16,7 @@ namespace MiniTorrentClientTest
     {
         public static void Main(string[] args)
         {
-            MiniTorrentCrud db = new MiniTorrentCrud();
+//            MiniTorrentCrud db = new MiniTorrentCrud();
 //            DALCreateUserTest(db);
 //            DALCreateLoggedInUserTest(db);
 //            DALDeleteLoggedInUserTest(db);
@@ -26,6 +26,12 @@ namespace MiniTorrentClientTest
 //            DALReadFiles(db);
 //            DALReadFile(db);
 //            DALReadLoggedInUser(db);
+//            LoginTest();
+//            LogoutTest();
+//            GetFiles();
+//            GetFileListTest();
+            GetUserListTest();
+
             Console.ReadKey();
         }
 
@@ -186,6 +192,179 @@ namespace MiniTorrentClientTest
 
 
             Console.WriteLine("Requests sent");
+        }
+
+        public static void LoginTest()
+        {
+            WebClient request = new WebClient();
+            Uri httpUri = new Uri("http://localhost:8090/MiniTorrentService/login");
+
+            List<KeyValuePair<string, int>> filesToSend = new List<KeyValuePair<string, int>>();
+            filesToSend.Add(new KeyValuePair<string, int>("file_1", 123123));
+            filesToSend.Add(new KeyValuePair<string, int>("file_2", 456654));
+
+
+            object signInDataJson = new
+            {
+                username = "u4",
+                password = "u4",
+                ip = "10.10.10.10",
+                port = 9999,
+                files = filesToSend
+
+            };
+
+            string signInSerialize = (new JavaScriptSerializer()).Serialize(new
+            {
+                req = signInDataJson
+            });
+
+            request.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+            string res = null;
+            try
+            {
+                res = request.UploadString(httpUri, "POST", signInSerialize);
+            }
+            catch (WebException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
+
+            Console.WriteLine(res);
+        }
+
+
+        public static void LogoutTest()
+        {
+
+            WebClient request = new WebClient();
+            Uri httpUri = new Uri("http://localhost:8090/MiniTorrentService/logout");
+
+            object logout = new
+            {
+                username = "u4",
+                password = "u4"
+            };
+
+            string json = (new JavaScriptSerializer()).Serialize(new
+            {
+                req = logout
+            });
+
+
+            request.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+            string res = null;
+            try
+            {
+                res = request.UploadString(httpUri, "POST", json);
+            }
+            catch (WebException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+
+            Console.WriteLine(res);
+
+        }
+
+
+        public static void GetFiles()
+        {
+            WebClient request = new WebClient();
+            Uri httpUri = new Uri("http://localhost:8090/MiniTorrentService/filelist");
+
+            object login = new
+            {
+                username = "u1",
+                password = "u1"
+            };
+
+            string json = (new JavaScriptSerializer()).Serialize(new
+            {
+                req = login
+            });
+
+
+            request.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+            string res = null;
+            try
+            {
+                res = request.UploadString(httpUri, "POST", json);
+            }
+            catch (WebException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+
+            Console.WriteLine(res);
+        }
+
+        public static void GetFileListTest()
+        {
+            WebClient request = new WebClient();
+            Uri httpUri = new Uri("http://localhost:8090/MiniTorrentService/filelistbyuser");
+
+            object search = new
+            {
+                username = "u1",
+                password = "u1",
+                targetusername = "u2"
+            };
+
+            string json = (new JavaScriptSerializer()).Serialize(new
+            {
+                req = search
+            });
+
+
+            request.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+            string res = null;
+            try
+            {
+                res = request.UploadString(httpUri, "POST", json);
+            }
+            catch (WebException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            Console.WriteLine(res);
+        }
+
+
+        public static void GetUserListTest()
+        {
+            WebClient request = new WebClient();
+            Uri httpUri = new Uri("http://localhost:8090/MiniTorrentService/userlistbyfile");
+
+            object search = new
+            {
+                username = "u1",
+                password = "u1",
+                filename = "POPO"
+            };
+
+            string json = (new JavaScriptSerializer()).Serialize(new
+            {
+                req = search
+            });
+
+
+            request.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+            string res = null;
+            try
+            {
+                res = request.UploadString(httpUri, "POST", json);
+            }
+            catch (WebException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            Console.WriteLine(res);
         }
     }
 }

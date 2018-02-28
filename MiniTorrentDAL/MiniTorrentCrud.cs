@@ -7,7 +7,12 @@ namespace MiniTorrentDAL
 {
     public class MiniTorrentCrud : IMiniTorrentCrud
     {
-        // Implemented
+        /// <summary>
+        /// Create a user entry in the database.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns>success - usename, failure - null</returns>
         public string CreateUser(string username, string password)
         {
             using (var db = new MiniTorrentContext())
@@ -30,7 +35,15 @@ namespace MiniTorrentDAL
                 return null;
             }
         }
-        // Implemented
+
+        /// <summary>
+        /// Create a loggedinuser entry in the database.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        /// <param name="files"></param>
+        /// <returns>success - usename, failure - null</returns>
         public string CreateLoggedInUser(string username, string ip, int port, Dictionary<string, int> files)
         {
             using (var db = new MiniTorrentContext())
@@ -44,6 +57,7 @@ namespace MiniTorrentDAL
                     // Manage file-logged user relationship
                     foreach (var file in files)
                     {
+                        Console.WriteLine(file.Value);
                         var fileQuery = db.FileEntities.Find(file.Key);
                         if (fileQuery != null)
                         {
@@ -72,6 +86,7 @@ namespace MiniTorrentDAL
                     db.LoggedInUserEntities.Add(loggedInUserEntity);
                     db.SaveChanges();
                     ConsoleLogger(username + " " + ip + " " + port + " " + "entry was added to loggedinusers");
+                    return username;
                 }
                 catch (Exception e)
                 {
@@ -81,7 +96,13 @@ namespace MiniTorrentDAL
                 return null;
             }
         }
-        // Implemented
+
+        /// <summary>
+        /// Update file list, for loggedin user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="files"></param>
+        /// <returns>success - usename, failure - null</returns>
         public string UpdateFilesForLoggedInUser(string username, Dictionary<string, int> files)
         {
             using (var db = new MiniTorrentContext())
@@ -144,7 +165,11 @@ namespace MiniTorrentDAL
             }
         }
 
-        // NOT IMPLEMENTED
+        /// <summary>
+        /// NOT IMPLEMENTED
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public string UpdateLoggedInUserTimeStamp(string username)
         {
             using (var db = new MiniTorrentContext())
@@ -162,7 +187,10 @@ namespace MiniTorrentDAL
             }
         }
 
-        // NOT IMPLEMENTED
+        /// <summary>
+        /// NOT IMPLEMENTED
+        /// </summary>
+        /// <returns></returns>
         public List<UserObject> ReadUsers()
         {
             using (var db = new MiniTorrentContext())
@@ -180,7 +208,11 @@ namespace MiniTorrentDAL
             }
         }
         
-        // Implemented
+        /// <summary>
+        /// Get a user from database.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Success - UserObject, Failure - null</returns>
         public UserObject ReadUser(string username)
         {
             using (var db = new MiniTorrentContext())
@@ -206,7 +238,10 @@ namespace MiniTorrentDAL
             }
         }
 
-        // Implemented
+        /// <summary>
+        /// Get all available files in database.
+        /// </summary>
+        /// <returns>Success - List of FileObject, Failure - null</returns>
         public List<FileObject> ReadFiles()
         {
             using (var db = new MiniTorrentContext())
@@ -252,7 +287,11 @@ namespace MiniTorrentDAL
             }
         }
 
-        // Implemented
+        /// <summary>
+        /// Get file information from database.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Success - FileObject, Failure - null</returns>
         public FileObject ReadFile(string name)
         {
             using (var db = new MiniTorrentContext())
@@ -287,7 +326,10 @@ namespace MiniTorrentDAL
             }
         }
         
-        // NOT IMPLEMENTED
+        /// <summary>
+        /// NOT IMPLEMENTED
+        /// </summary>
+        /// <returns></returns>
         public List<LoggedInUserObject> ReadLoggedInUsers()
         {
             using (var db = new MiniTorrentContext())
@@ -305,7 +347,11 @@ namespace MiniTorrentDAL
             }
         }
 
-        // Implemented
+        /// <summary>
+        /// Get a loggedinuser from database.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Success - LoggedInUserObject, Failure - null</returns>
         public LoggedInUserObject ReadLoggedInUser(string username)
         {
             using (var db = new MiniTorrentContext())
@@ -344,7 +390,11 @@ namespace MiniTorrentDAL
             }
         }
 
-        // NOT IMPLEMENTED
+        /// <summary>
+        /// NOT IMPLEMENTED
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public string DeleteUser(string username)
         {
             using (var db = new MiniTorrentContext())
@@ -361,8 +411,12 @@ namespace MiniTorrentDAL
                 return null;
             }
         }
-        
-        // NOT IMPLEMENTED
+
+        /// <summary>
+        /// NOT IMPLEMENTED
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public bool DeleteUsers()
         {
             using (var db = new MiniTorrentContext())
@@ -380,9 +434,14 @@ namespace MiniTorrentDAL
             }
         }
 
-        // Implemeted
+        /// <summary>
+        /// Delete loggedinuser from database.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Success - username, Failure - null</returns>
         public string DeleteLoggedInUser(string username)
         {
+            
             using (var db = new MiniTorrentContext())
             {
                 try
@@ -416,7 +475,10 @@ namespace MiniTorrentDAL
             }
         }
 
-        // NOT IMPLEMENTED
+        /// <summary>
+        /// NOT IMPLEMENTED.
+        /// </summary>
+        /// <returns></returns>
         public bool DeleteLoggedInUsers()
         {
             using (var db = new MiniTorrentContext())
