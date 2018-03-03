@@ -30,8 +30,8 @@ namespace MiniTorrentClientTest
 //            LogoutTest();
 //            GetFiles();
 //            GetFileListTest();
-            GetUserListTest();
-
+//            GetUserListTest();
+            UpdateFileListTest();
             Console.ReadKey();
         }
 
@@ -345,6 +345,42 @@ namespace MiniTorrentClientTest
                 username = "u1",
                 password = "u1",
                 filename = "POPO"
+            };
+
+            string json = (new JavaScriptSerializer()).Serialize(new
+            {
+                req = search
+            });
+
+
+            request.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+            string res = null;
+            try
+            {
+                res = request.UploadString(httpUri, "POST", json);
+            }
+            catch (WebException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            Console.WriteLine(res);
+        }
+
+        public static void UpdateFileListTest()
+        {
+            WebClient request = new WebClient();
+            Uri httpUri = new Uri("http://localhost:8090/MiniTorrentService/updatefilelistbyuser");
+
+            List<KeyValuePair<string, int>> filesToSend = new List<KeyValuePair<string, int>>();
+            filesToSend.Add(new KeyValuePair<string, int>("file_1", 123123));
+            filesToSend.Add(new KeyValuePair<string, int>("file_2", 456654));
+
+            object search = new
+            {
+                username = "u2",
+                password = "u2",
+                files = filesToSend
             };
 
             string json = (new JavaScriptSerializer()).Serialize(new

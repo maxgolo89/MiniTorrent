@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="RequestData\FileListPerUserRequest.cs" />
     <Compile Include="RequestData\Request.cs" />
+    <Compile Include="RequestData\UpdateFilesRequest.cs" />
     <Compile Include="RequestData\UserListPerFileRequest.cs" />
     <Compile Include="RequestData\LoginRequest.cs" />
     <Compile Include="IMiniTorrentService.cs" />

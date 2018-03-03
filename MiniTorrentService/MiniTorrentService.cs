@@ -134,6 +134,20 @@ namespace MiniTorrentService
             return serializer.Serialize(CreateResponseJson(new { user = "" }));
         }
 
+        /// <summary>
+        /// Updates the file list for a logged in user.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        public string UpdateFileListByUser(UpdateFilesRequest req)
+        {
+            if (Authenticate(req.Username, req.Password))
+            {
+                string username = db.UpdateFilesForLoggedInUser(req.Username, req.Files);
+                return serializer.Serialize(CreateResponseJson(new { user = username }));
+            }
+            return serializer.Serialize(CreateResponseJson(new { user = "" }));
+        }
 
         /// <summary>
         /// Authenticate the users credentials.

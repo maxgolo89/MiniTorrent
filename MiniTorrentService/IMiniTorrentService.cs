@@ -61,6 +61,14 @@ namespace MiniTorrentService
         /// <returns>Json string</returns>
         [OperationContract, WebInvoke(UriTemplate = "userlistbyfile", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
         string GetUserListByFile(UserListPerFileRequest req);
+
+        /// <summary>
+        /// Update the file list of a logged in user.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [OperationContract, WebInvoke(UriTemplate = "updatefilelistbyuser", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
+        string UpdateFileListByUser(UpdateFilesRequest req);
     }
 
 }
