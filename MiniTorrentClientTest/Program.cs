@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -16,22 +17,32 @@ namespace MiniTorrentClientTest
     {
         public static void Main(string[] args)
         {
-//            MiniTorrentCrud db = new MiniTorrentCrud();
-//            DALCreateUserTest(db);
-//            DALCreateLoggedInUserTest(db);
-//            DALDeleteLoggedInUserTest(db);
-//            DALUpdateFileList(db);
-//            DALUpdateFileList2(db);
-//            DALReadUser(db);
-//            DALReadFiles(db);
-//            DALReadFile(db);
-//            DALReadLoggedInUser(db);
-//            LoginTest();
-//            LogoutTest();
-//            GetFiles();
-//            GetFileListTest();
-//            GetUserListTest();
-            UpdateFileListTest();
+            //            MiniTorrentCrud db = new MiniTorrentCrud();
+            //            DALCreateUserTest(db);
+            //            DALCreateLoggedInUserTest(db);
+            //            DALDeleteLoggedInUserTest(db);
+            //            DALUpdateFileList(db);
+            //            DALUpdateFileList2(db);
+            //            DALReadUser(db);
+            //            DALReadFiles(db);
+            //            DALReadFile(db);
+            //            DALReadLoggedInUser(db);
+            //            LoginTest();
+            //            LogoutTest();
+            //            GetFiles();
+            //            GetFileListTest();
+            //            GetUserListTest();
+            //            UpdateFileListTest();
+            var host = Dns.GetHostAddresses(Dns.GetHostName());
+            foreach (var ip in host)
+            {
+                Console.WriteLine(ip);
+//                if (ip.AddressFamily == AddressFamily.InterNetwork)
+//                {
+//                    Console.WriteLine(ip.ToString());
+//                }
+            }
+            Console.WriteLine();
             Console.ReadKey();
         }
 

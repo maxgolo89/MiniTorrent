@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MiniTorrentClient"
         mc:Ignorable="d"
-        Title="Configuration" Height="350" Width="525">
+        Title="Configuration" Height="350" Width="530.385">
     <Grid>
         <GroupBox x:Name="server_conf" Header="Server Configuration" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="115" Width="497">
             <Grid HorizontalAlignment="Left" Height="95" Margin="10,10,-2,-12" VerticalAlignment="Top" Width="477">
@@ -27,9 +27,10 @@
                 <TextBox x:Name="tb_client_port_out" HorizontalAlignment="Left" Height="23" Margin="232,28,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="245"/>
                 <TextBox x:Name="tb_client_shared_folder" HorizontalAlignment="Left" Height="23" Margin="232,54,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="211"/>
                 <TextBox x:Name="tb_client_dest_folder" HorizontalAlignment="Left" Height="23" Margin="232,81,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="211"/>
-                <Button x:Name="btn_client_shared" Content="..." Margin="443,54,5,0" VerticalAlignment="Top" Height="24"/>
-                <Button x:Name="btn_client_dest" Content="..." Margin="443,81,5,0" VerticalAlignment="Top" Height="23"/>
+                <Button x:Name="btn_client_shared" Content="..." Margin="448,54,0,0" VerticalAlignment="Top" Height="23" Click="btn_client_shared_Click"/>
+                <Button x:Name="btn_client_dest" Content="..." Margin="448,81,0,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Left" Width="29" Click="btn_client_dest_Click"/>
             </Grid>
         </GroupBox>
+        <Button x:Name="btn_connect" Content="Connect" HorizontalAlignment="Left" Margin="432,287,0,0" VerticalAlignment="Top" Width="75" Click="btn_connect_Click"/>
     </Grid>
 </Window>

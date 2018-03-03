@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<MiniTorrentParams>
-  <ServerIpAddress>localhost</ServerIpAddress>
+<MiniTorrentParameters>
+  <ServerIpAddress>http://localhost:8090/MiniTorrentService</ServerIpAddress>
   <IncomingPort>8005</IncomingPort>
   <OutgoingPort>8006</OutgoingPort>
   <Username>u1</Username>
   <Password>u1</Password>
-  <PublishedFilesSource>D:\MiniTorrent</PublishedFilesSource>
-  <DownloadedFilesDestination>D:\MiniTorrent_Downloaded</DownloadedFilesDestination>
-</MiniTorrentParams>
+  <SharedFolder>D:\MiniTorrent</SharedFolder>
+  <DestinationFolder>D:\MiniTorrent_Downloaded</DestinationFolder>
+</MiniTorrentParameters>
