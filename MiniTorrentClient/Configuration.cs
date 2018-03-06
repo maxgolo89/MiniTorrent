@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MiniTorrentClient
 {
-    class Configuration
+    public class Configuration
     {
         public string ServerAddress { get; set; }
         public string Username { get; set; }

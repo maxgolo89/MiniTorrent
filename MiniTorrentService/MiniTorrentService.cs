@@ -10,6 +10,7 @@ using System.Web.Script.Serialization;
 using MiniTorrentDAL;
 using MiniTorrentDAL.Messeges;
 using MiniTorrentService.RequestData;
+using Newtonsoft.Json;
 
 namespace MiniTorrentService
 {
@@ -34,10 +35,10 @@ namespace MiniTorrentService
                 string user = db.CreateLoggedInUser(req.Username, req.IP, req.Port, req.Files);
                 if (user != null)
                 {
-                    return serializer.Serialize(CreateUserJson(user));
+                    return JsonConvert.SerializeObject(CreateUserJson(user));
                 }
             }
-            return serializer.Serialize(CreateUserJson(""));
+            return JsonConvert.SerializeObject(CreateUserJson(""));
         }
 
         /// <summary>

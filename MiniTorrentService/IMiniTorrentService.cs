@@ -19,7 +19,7 @@ namespace MiniTorrentService
         /// </summary>
         /// <param name="req"></param>
         /// <returns>Json string</returns>
-        [OperationContract, WebInvoke(UriTemplate = "login", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
+        [OperationContract, WebInvoke(UriTemplate = "login", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
         string Login(LoginRequest req);
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace MiniTorrentService
         /// </summary>
         /// <param name="req"></param>
         /// <returns>Json string</returns>
-        [OperationContract, WebInvoke(UriTemplate = "logout", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
+        [OperationContract, WebInvoke(UriTemplate = "logout", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
         string Logout(Request req);
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace MiniTorrentService
         /// </summary>
         /// <param name="req"></param>
         /// <returns>Json string</returns>
-        [OperationContract, WebInvoke(UriTemplate = "filelist", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
+        [OperationContract, WebInvoke(UriTemplate = "filelist", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
         string GetFileList(Request req);
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace MiniTorrentService
         /// </summary>
         /// <param name="req"></param>
         /// <returns>Json string</returns>
-        [OperationContract, WebInvoke(UriTemplate = "userlist", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
+        [OperationContract, WebInvoke(UriTemplate = "userlist", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
         string GetUserList(Request req);
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace MiniTorrentService
         /// </summary>
         /// <param name="req"></param>
         /// <returns>Json string</returns>
-        [OperationContract, WebInvoke(UriTemplate = "filelistbyuser", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
+        [OperationContract, WebInvoke(UriTemplate = "filelistbyuser", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
         string GetFileListByUser(FileListPerUserRequest req);
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace MiniTorrentService
         /// </summary>
         /// <param name="req"></param>
         /// <returns>Json string</returns>
-        [OperationContract, WebInvoke(UriTemplate = "userlistbyfile", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
+        [OperationContract, WebInvoke(UriTemplate = "userlistbyfile", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
         string GetUserListByFile(UserListPerFileRequest req);
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace MiniTorrentService
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        [OperationContract, WebInvoke(UriTemplate = "updatefilelistbyuser", RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
+        [OperationContract, WebInvoke(UriTemplate = "updatefilelistbyuser", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, Method = "POST", BodyStyle = WebMessageBodyStyle.Wrapped)]
         string UpdateFileListByUser(UpdateFilesRequest req);
     }
 

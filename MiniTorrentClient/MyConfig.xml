@@ -3,8 +3,8 @@
   <ServerIpAddress>http://localhost:8090/MiniTorrentService</ServerIpAddress>
   <IncomingPort>8005</IncomingPort>
   <OutgoingPort>8006</OutgoingPort>
-  <Username>u1</Username>
-  <Password>u1</Password>
+  <Username>u3</Username>
+  <Password>u3</Password>
   <SharedFolder>D:\MiniTorrent</SharedFolder>
   <DestinationFolder>D:\MiniTorrent_Downloaded</DestinationFolder>
 </MiniTorrentParameters>

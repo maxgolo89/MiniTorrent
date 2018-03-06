@@ -19,6 +19,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.XPath;
+using MiniTorrentClient.ResponseData;
+using Newtonsoft.Json;
 using MessageBox = System.Windows.MessageBox;
 
 namespace MiniTorrentClient
@@ -159,23 +161,48 @@ namespace MiniTorrentClient
                 // Setup needed login information
                 Uri loginUri = new Uri(CurrentConfiguration.ServerAddress + "/login");
                 List<KeyValuePair<string, int>> filesToShare = KeyValuePairFilesFactory();
-                string jsonLoginInfo = serializer.Serialize(new
+
+                object toSend = new
                 {
                     username = CurrentConfiguration.Username,
                     password = CurrentConfiguration.Password,
                     ip = CurrentConfiguration.HostIp,
                     port = CurrentConfiguration.OutPort,
                     files = filesToShare
+                };
+
+                string jsonLoginInfo = serializer.Serialize(new
+                {
+                    req = toSend
                 });
 
-                // CONTINUE  FROM HERE
-                // 1. Setup connection.
-                // 2. Connect.
-                // 3. Open main window.
 
                 // Setup connection
                 WebClient request = new WebClient();
-                
+                request.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                var response = request.UploadString(loginUri, jsonLoginInfo);
+                if (response == null)
+                    MessageBox.Show("Something went wrong");
+                else
+                {
+                    // Parse result string
+                    dynamic result = JsonConvert.DeserializeObject(response);
+                    string innerJson = result.LoginResult.ToString();
+                    InnerResult resultData = JsonConvert.DeserializeObject<InnerResult>(innerJson);
+
+                    // If username returned, login successful, open MiniTorrentProgram window.
+                    if (resultData.response.username.Equals(CurrentConfiguration.Username))
+                    {
+                        MiniTorrentProgram torrent = new MiniTorrentProgram(CurrentConfiguration);
+                        torrent.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unseccessful login");
+                    }
+                }                   
+
             }
             catch (Exception exception)
             {

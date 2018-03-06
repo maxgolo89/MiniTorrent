@@ -57,7 +57,6 @@ namespace MiniTorrentDAL
                     // Manage file-logged user relationship
                     foreach (var file in files)
                     {
-                        Console.WriteLine(file.Value);
                         var fileQuery = db.FileEntities.Find(file.Key);
                         if (fileQuery != null)
                         {
