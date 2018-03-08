@@ -77,6 +77,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AvailableFile.cs" />
+    <Compile Include="DownloadingFile.cs" />
+    <Compile Include="FileTransfer\DownloadTask.cs" />
+    <Compile Include="FileTransfer\SizeConstants.cs" />
+    <Compile Include="FileTransfer\FileRequest.cs" />
+    <Compile Include="FileTransfer\UploadTask.cs" />
     <Compile Include="MyFile.cs" />
     <Compile Include="ResponseData\InnerResult.cs" />
     <Compile Include="TorrentUser.cs" />
@@ -146,9 +151,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FileTransfer\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -167,7 +167,7 @@ namespace MiniTorrentClient
                     username = CurrentConfiguration.Username,
                     password = CurrentConfiguration.Password,
                     ip = CurrentConfiguration.HostIp,
-                    port = CurrentConfiguration.OutPort,
+                    port = CurrentConfiguration.InPort,
                     files = filesToShare
                 };
 
@@ -210,6 +210,10 @@ namespace MiniTorrentClient
             }
         }
 
+        /// <summary>
+        /// Create list of KeyValuePair of the shared folder files.
+        /// </summary>
+        /// <returns></returns>
         private List<KeyValuePair<string, int>> KeyValuePairFilesFactory()
         {
             List<KeyValuePair<string, int>> files = new List<KeyValuePair<string, int>>();
@@ -227,6 +231,9 @@ namespace MiniTorrentClient
             return files;
         }
 
+        /// <summary>
+        /// Update configuration file and object from text boxes.
+        /// </summary>
         private void UpdateConfiguration()
         {
             XmlDocument xmlConfFile = new XmlDocument();

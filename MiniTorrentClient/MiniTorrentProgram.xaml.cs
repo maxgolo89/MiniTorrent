@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MiniTorrentClient.FileTransfer;
 using Newtonsoft.Json;
 using FileInfo = System.IO.FileInfo;
 
@@ -25,15 +26,22 @@ namespace MiniTorrentClient
     public partial class MiniTorrentProgram : Window
     {
         public Configuration CurrentConfiguration { get; set; }
+
         private List<AvailableFile> AvailableFiles;
         private CollectionViewSource AvailableFileSource;
-//        private List<DownloadingFileItem> downloadingFileList;
-//        private CollectionViewSource DownloadingFileSource;
 
+        private List<DownloadingFile> DownloadingFiles;
+        private CollectionViewSource DownloadingFileSource;
         private List<MyFile> OwnedFilesList;
-//        private List<AvailableFile> DownloadedFilesList;
+        private UploadTask server;
 
-
+        /// <summary>
+        /// *** Constractor ***
+        /// * Initialize GUI components.
+        /// * Update the server and locally the owned file list.
+        /// * Update available files for download.
+        /// </summary>
+        /// <param name="configuration"></param>
         public MiniTorrentProgram(Configuration configuration)
         {
             CurrentConfiguration = configuration;
@@ -42,14 +50,17 @@ namespace MiniTorrentClient
             AvailableFileSource.Source = AvailableFiles;
             UpdateOwnedFile();
             UpdateAvailableFiles();
+            server = new UploadTask(configuration);
         }
-
-        private void UpdateDownloadingFiles()
-        {
-//            DownloadingFileSource.Source = null;
-//            downloadingFileSource.Source = downloadingFileList;
-        }
-
+        
+        /// <summary>
+        /// *** Update the available files list, and update the view of it ***
+        /// 1. Send Json REST request to the server with credentials, to /filelist method uri.
+        /// 2. Parse the result into AvailableFile objects list.
+        /// 3. Update view.
+        /// * Blocking method.
+        /// * Need to refactor it to support cuncorrency.
+        /// </summary>
         private void UpdateAvailableFiles()
         {
             AvailableFiles = new List<AvailableFile>();
@@ -88,11 +99,12 @@ namespace MiniTorrentClient
             AvailableFileSource.Source = AvailableFiles;
         }
 
-        private void UpdateAvailableFilesView(object sender, EventArgs e)
-        {
-            
-        }
-
+        /// <summary>
+        /// *** Update local files list, and update the server ***
+        /// 1. Traverse the files in the shared directory, and instantiate MyFile with each file.
+        /// 2. Add each MyFile object to OwnedFilesList.
+        /// 3. Send owned files list to the server.
+        /// </summary>
         private void UpdateOwnedFile()
         {
             OwnedFilesList = new List<MyFile>();
@@ -106,12 +118,18 @@ namespace MiniTorrentClient
             SendOwnedFilesUpdate();
         }
 
+        /// <summary>
+        /// *** Update the server with currently owned file list ***
+        /// 1. Parse files into list of KeyValuePair of Name and Size.
+        /// 2. Pack list with username and password to a json string.
+        /// 3. Send update request to /updatefilelistbyuser method uri.
+        /// </summary>
         private void SendOwnedFilesUpdate()
         {
             try
             {
                 Uri loginUri = new Uri(CurrentConfiguration.ServerAddress + "/updatefilelistbyuser");
-                List<KeyValuePair<string, int>> filesToShare = KeyValuePairFilesFactory();
+                List<KeyValuePair<string, int>> filesToShare = KeyValuePairFilesFactory(OwnedFilesList);
 
                 object toSend = new
                 {
@@ -136,13 +154,17 @@ namespace MiniTorrentClient
             
         }
 
-        private List<KeyValuePair<string, int>> KeyValuePairFilesFactory()
+        /// <summary>
+        /// *** Takes list of MyFile objects and repacks it to list of KeyValuePair's of Name and Size ***
+        /// </summary>
+        /// <returns></returns>
+        private List<KeyValuePair<string, int>> KeyValuePairFilesFactory(List<MyFile> filesToRepack)
         {
             List<KeyValuePair<string, int>> files = new List<KeyValuePair<string, int>>();
             if (OwnedFilesList.Count == 0)
                 return files;
 
-            foreach (var file in OwnedFilesList)
+            foreach (var file in filesToRepack)
             {
                 string fileName = file.Name;
                 int fileSize = (int)file.Size;
@@ -153,7 +175,7 @@ namespace MiniTorrentClient
         }
 
         /// <summary>
-        /// Handle Close event, logout user.
+        /// *** Handle Close event, logout user ***
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -182,6 +204,9 @@ namespace MiniTorrentClient
             
         }
 
+
+
+
         private void UpdateFilesButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateOwnedFile();
@@ -190,7 +215,8 @@ namespace MiniTorrentClient
 
         private void RequestAFileButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            AvailableFile fileToDownload = (AvailableFile)AvailableFileDataGrid.SelectedItem;
+            DownloadTask download = new DownloadTask(fileToDownload, CurrentConfiguration);
         }
 
         private void ReflectAFile_Click(object sender, RoutedEventArgs e)
