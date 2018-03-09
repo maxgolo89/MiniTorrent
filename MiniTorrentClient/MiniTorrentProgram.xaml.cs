@@ -25,6 +25,7 @@ namespace MiniTorrentClient
     /// </summary>
     public partial class MiniTorrentProgram : Window
     {
+        public static object theLock = new object();
         public Configuration CurrentConfiguration { get; set; }
 
         private List<AvailableFile> AvailableFiles;
@@ -32,6 +33,7 @@ namespace MiniTorrentClient
 
         private List<DownloadingFile> DownloadingFiles;
         private CollectionViewSource DownloadingFileSource;
+
         private List<MyFile> OwnedFilesList;
         private UploadTask server;
 
@@ -46,10 +48,20 @@ namespace MiniTorrentClient
         {
             CurrentConfiguration = configuration;
             InitializeComponent();
+
+            // Initialize available file list
             AvailableFileSource = (CollectionViewSource) (FindResource("AvailableFileSource"));
             AvailableFileSource.Source = AvailableFiles;
+
+            // Initialize downloading file list
+            DownloadingFileSource = (CollectionViewSource) (FindResource("DownloadingFileSource"));
+            DownloadingFileSource.Source = DownloadingFiles;
+            DownloadingFiles = new List<DownloadingFile>();
+
             UpdateOwnedFile();
             UpdateAvailableFiles();
+
+            // Connection listener for upload
             server = new UploadTask(configuration);
         }
         
@@ -115,6 +127,12 @@ namespace MiniTorrentClient
                 OwnedFilesList.Add(new MyFile() {Name = f.Name, Size = (int)f.Length});
             }
 
+            foreach (var file in Directory.GetFiles(CurrentConfiguration.DestinationFolder))
+            {
+                FileInfo f = new FileInfo(file);
+                OwnedFilesList.Add(new MyFile() { Name = f.Name, Size = (int)f.Length });
+            }
+
             SendOwnedFilesUpdate();
         }
 
@@ -174,8 +192,93 @@ namespace MiniTorrentClient
             return files;
         }
 
+
         /// <summary>
-        /// *** Handle Close event, logout user ***
+        /// *** Update download progress ***
+        /// Invoked on update event from download task.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="percentage"></param>
+        private void UpdateDownloadProgress(string name, double percentage)
+        {
+            DownloadingFile downloadFile = GetFileDownloadingByName(name);
+            if (downloadFile == null)
+                return;
+
+            lock (theLock)
+            {
+                downloadFile.Percentage = percentage;
+            }
+        }
+
+        /// <summary>
+        /// *** Update download finished ***
+        /// Invoked on update event from download task.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="percentage"></param>
+        /// <param name="endTime"></param>
+        private void UpdateDownloadFinished(string name, double percentage, DateTime endTime)
+        {
+            DownloadingFile downloadFile = GetFileDownloadingByName(name);
+            if (downloadFile == null)
+                return;
+
+            lock (theLock)
+            {
+                downloadFile.Percentage = percentage;
+                downloadFile.EndedTime = endTime;
+            }
+
+            UpdateOwnedFile();
+        }
+
+        /// <summary>
+        /// *** Search file in own files ***
+        /// *** HELPER METHOD ***
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private DownloadingFile GetFileDownloadingByName(string name)
+        {
+            DownloadingFile downloadFile = null;
+            foreach (var download in DownloadingFiles)
+            {
+                if (download.Filename == name)
+                {
+                    downloadFile = download;
+                    break;
+                }
+            }
+
+            if (downloadFile == null)
+                return null;
+
+            return downloadFile;
+        }
+
+        /// <summary>
+        /// *** Check if user have a file ***
+        /// true - file not found.
+        /// false - file was found.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private bool ValidateFile(string name)
+        {
+            foreach (var file in OwnedFilesList)
+            {
+                if (file.Name == name)
+                    return false;
+            }
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// *** Handle Close event ***
+        /// Logs out the user.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -205,28 +308,79 @@ namespace MiniTorrentClient
         }
 
 
-
-
+        /// <summary>
+        /// *** Update own and available files ***
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateFilesButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateOwnedFile();
             UpdateAvailableFiles();
         }
 
+        /// <summary>
+        /// *** Make a download request ***
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RequestAFileButton_Click(object sender, RoutedEventArgs e)
         {
             AvailableFile fileToDownload = (AvailableFile)AvailableFileDataGrid.SelectedItem;
+            if (!ValidateFile(fileToDownload.Name))
+            {
+                MessageBox.Show("You already own this file");
+                return;
+            }
+
             DownloadTask download = new DownloadTask(fileToDownload, CurrentConfiguration);
+            DownloadingFile progressView = new DownloadingFile() {Filename = fileToDownload.Name, Percentage = 0, Size = fileToDownload.Size, StartedTime = DateTime.Now};
+            DownloadingFiles.Add(progressView);
+            DownloadingFileSource.Source = null;
+            DownloadingFileSource.Source = DownloadingFiles;
+            download.DownloadProgressEventHandler += UpdateDownloadProgress;
+            download.DownloadFinishedEventHandler += UpdateDownloadFinished;
+            download.ConnectionInitializer();
         }
 
+        
+        /// <summary>
+        /// TO BE IMPLEMENTED
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ReflectAFile_Click(object sender, RoutedEventArgs e)
         {
             
         }
 
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// *** Handle search ***
+        /// On each character search within available files.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            
+            string fileName = SearchTextBox.Text;
+
+            if (fileName == string.Empty)
+                ClearButton.IsEnabled = false;
+            else
+                ClearButton.IsEnabled = true;
+
+            var resultlist = from aFile in AvailableFiles where aFile.Name.Contains(fileName) select aFile;
+            AvailableFileSource.Source = resultlist.ToList();
+        }
+
+        /// <summary>
+        /// *** Handle clear button click ***
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClearButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text = "";
         }
     }
 }

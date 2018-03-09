@@ -97,7 +97,6 @@ namespace MiniTorrentClient
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-//                MessageBox.Show("Oops, something went wrong, check your xml config file");
             }
         }
 
@@ -211,7 +210,7 @@ namespace MiniTorrentClient
         }
 
         /// <summary>
-        /// Create list of KeyValuePair of the shared folder files.
+        /// Create list of KeyValuePair of the shared and downloaded folder files.
         /// </summary>
         /// <returns></returns>
         private List<KeyValuePair<string, int>> KeyValuePairFilesFactory()
@@ -221,6 +220,14 @@ namespace MiniTorrentClient
                 return files;
 
             foreach (var file in Directory.GetFiles(CurrentConfiguration.SharedFolder))
+            {
+                var fileInstance = new FileInfo(file);
+                string fileName = fileInstance.Name;
+                int fileSize = (int)fileInstance.Length;
+                files.Add(new KeyValuePair<string, int>(fileName, fileSize));
+            }
+
+            foreach (var file in Directory.GetFiles(CurrentConfiguration.DestinationFolder))
             {
                 var fileInstance = new FileInfo(file);
                 string fileName = fileInstance.Name;

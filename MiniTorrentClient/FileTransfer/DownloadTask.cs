@@ -14,10 +14,14 @@ namespace MiniTorrentClient.FileTransfer
 {
     class DownloadTask
     {
+        public delegate void UpdateFileDownloadProgress(string name, double percentage);
+        public delegate void UpdateFileDownloadFinished(string name, double percentage, DateTime endTime);
+
+        public event UpdateFileDownloadProgress DownloadProgressEventHandler;
+        public event UpdateFileDownloadFinished DownloadFinishedEventHandler;
         private AvailableFile file;
         private Configuration configuration;
         private Queue<DownloadStream> downloadQueue;
-        private LinkedList<Thread> threads;
         private byte[] recievedFile;
         public int TotalBytesReceived = 0;
         private static object theLock = new object();
@@ -29,15 +33,16 @@ namespace MiniTorrentClient.FileTransfer
             this.file = file;
             this.configuration = configuration;
             downloadQueue = new Queue<DownloadStream>();
-            threads = new LinkedList<Thread>();
             recievedFile = new byte[file.Size];
-            ConnectionInitializer();
         }
 
         /// <summary>
         /// *** Setup connection to all peers and make initial request ***
+        /// 1. Determine how many bytes to ask from each peer.
+        /// 2. Setup FileRequest and TcpClient for each peer.
+        /// 3. Start a thread for downloading the file.
         /// </summary>
-        private async void ConnectionInitializer()
+        public async void ConnectionInitializer()
         {
             try
             {
@@ -59,7 +64,6 @@ namespace MiniTorrentClient.FileTransfer
 
                     downloadQueue.Enqueue(new DownloadStream(fileRequest, tcpClient));
                     Thread thread = new Thread(DownloadFile);
-                    threads.AddLast(thread);
                     thread.Start();
                 }
             }
@@ -72,6 +76,10 @@ namespace MiniTorrentClient.FileTransfer
 
         /// <summary>
         /// *** File download initiator ***
+        /// 1. Get a hook for network stream.
+        /// 2. Pack the file request into a json string.
+        /// 3. Send the file request.
+        /// 4. Start Receiving the file.
         /// </summary>
         private async void DownloadFile()
         {
@@ -116,6 +124,9 @@ namespace MiniTorrentClient.FileTransfer
 
         /// <summary>
         /// *** File receiver ***
+        /// 1. Read from network stream until file received completely.
+        /// 2. Start reassembling the file.
+        /// NEED TO IMPLEMENT PROGRESS BAR UPDATING
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="dStream"></param>
@@ -136,6 +147,7 @@ namespace MiniTorrentClient.FileTransfer
                         byteReceived += count;
                         TotalBytesReceived += count;
                     }
+                    FireProgressEvent();
                 }
 
                 DownloadFinished();
@@ -146,9 +158,20 @@ namespace MiniTorrentClient.FileTransfer
             }
         }
 
+        private void FireProgressEvent()
+        {
+            double percentage = ((double)TotalBytesReceived / file.Size) * 100;
+            DownloadProgressEventHandler(file.Name, percentage);
+        }
+
+        /// <summary>
+        /// *** Reassemble the downloaded file peices ***
+        /// 1. Check if all the file was received.
+        /// 2. Check if destination folder exists, and creates if not.
+        /// 3. Write the byte array into the file.
+        /// </summary>
         private void DownloadFinished()
         {
-            Console.WriteLine(Thread.CurrentThread.Name + "Is finishing...");
             lock (theFileLock)
             {
                 if (TotalBytesReceived != file.Size)
@@ -160,8 +183,8 @@ namespace MiniTorrentClient.FileTransfer
                 Directory.CreateDirectory(configuration.DestinationFolder);
             }
 
-            Console.WriteLine(configuration.DestinationFolder + @"\" + file.Name);
             File.WriteAllBytes(configuration.DestinationFolder + @"\" + file.Name, recievedFile);
+            DownloadFinishedEventHandler(file.Name, 100.0, DateTime.Now);
         }
     }
 
