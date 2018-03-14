@@ -326,7 +326,7 @@ namespace MiniTorrentDAL
         }
         
         /// <summary>
-        /// NOT IMPLEMENTED
+        /// Fetching all logged in users list.
         /// </summary>
         /// <returns></returns>
         public List<LoggedInUserObject> ReadLoggedInUsers()
@@ -335,7 +335,19 @@ namespace MiniTorrentDAL
             {
                 try
                 {
+                    List<LoggedInUserObject> loggedInUserObjects = new List<LoggedInUserObject>();
+                    List<LoggedInUserEntity> loggedInUserEntities = db.LoggedInUserEntities.ToList();
+                    foreach (var userEntity in loggedInUserEntities)
+                    {
+                        LoggedInUserObject user = new LoggedInUserObject();
+                        user.Username = userEntity.Username;
+                        user.Ip = userEntity.Ip;
+                        user.Port = userEntity.Port;
+                        loggedInUserObjects.Add(user);
+                    }
 
+                    ConsoleLogger("Logged in user list retrieved");
+                    return loggedInUserObjects;
                 }
                 catch (Exception e)
                 {
