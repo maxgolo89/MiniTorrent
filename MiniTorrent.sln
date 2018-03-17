@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTorrentService", "MiniTorrentService\MiniTorrentService.csproj", "{21C689D4-4D2A-4225-A890-09D5DA6C9D51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTorrentClientTest", "MiniTorrentClientTest\MiniTorrentClientTest.csproj", "{EE3B124F-E3B4-4E46-B292-FD2FBF08BBDE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTorrentServiceHost", "MiniTorrentServiceHost\MiniTorrentServiceHost.csproj", "{1935738E-0457-4BF3-9920-F40F302C846B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTorrentDAL", "MiniTorrentDAL\MiniTorrentDAL.csproj", "{BCFC41D2-4DC7-4ED9-AB99-A6C45758B45C}"
@@ -25,10 +23,6 @@ Global
 		{21C689D4-4D2A-4225-A890-09D5DA6C9D51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21C689D4-4D2A-4225-A890-09D5DA6C9D51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21C689D4-4D2A-4225-A890-09D5DA6C9D51}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE3B124F-E3B4-4E46-B292-FD2FBF08BBDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE3B124F-E3B4-4E46-B292-FD2FBF08BBDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE3B124F-E3B4-4E46-B292-FD2FBF08BBDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE3B124F-E3B4-4E46-B292-FD2FBF08BBDE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1935738E-0457-4BF3-9920-F40F302C846B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1935738E-0457-4BF3-9920-F40F302C846B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1935738E-0457-4BF3-9920-F40F302C846B}.Release|Any CPU.ActiveCfg = Release|Any CPU

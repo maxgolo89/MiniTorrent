@@ -23,7 +23,6 @@ namespace MiniTorrentServiceHost
             host.AddServiceEndpoint(typeof(IMiniTorrentService), new WebHttpBinding(), httpUri);
             ServiceDebugBehavior stp = host.Description.Behaviors.Find<ServiceDebugBehavior>();
             stp.HttpHelpPageEnabled = false;
-            
             host.Open();
             Console.WriteLine("Server is up and running on " + ownEndPointAddress + ":8090");
             Console.ReadKey();

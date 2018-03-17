@@ -83,6 +83,7 @@
     <Compile Include="FileTransfer\FileRequest.cs" />
     <Compile Include="FileTransfer\UploadTask.cs" />
     <Compile Include="MyFile.cs" />
+    <Compile Include="ReflectionHandler.cs" />
     <Compile Include="ResponseData\InnerResult.cs" />
     <Compile Include="TorrentUser.cs" />
     <Page Include="MainWindow.xaml">

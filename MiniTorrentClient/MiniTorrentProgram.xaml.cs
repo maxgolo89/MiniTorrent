@@ -447,7 +447,29 @@ namespace MiniTorrentClient
         /// <param name="e"></param>
         private void ReflectAFile_Click(object sender, RoutedEventArgs e)
         {
-            
+            ReflectionHandler reflectionHandler = new ReflectionHandler();
+            FileUploadDownloadProgress file = (FileUploadDownloadProgress)DownloadingFilesDatagrid.SelectedItem;
+            try
+            {
+                if (!file.Filename.EndsWith(".dll"))
+                {
+                    MessageBox.Show("This is not a .dll file, and cannot be reflected.");
+                    return;
+                }
+
+                foreach (var fileOnDisk in Directory.GetFiles(CurrentConfiguration.DestinationFolder))
+                {
+                    if (fileOnDisk.EndsWith(file.Filename))
+                    {
+                        reflectionHandler.HandleReflection(@fileOnDisk);
+                        return;
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
 
         /// <summary>
