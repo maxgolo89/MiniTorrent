@@ -15,6 +15,13 @@ namespace MiniTorrentClient.FileTransfer
 {
     class UploadTask
     {
+        public delegate void NewUpload(string name, int size, string ip);
+        public delegate void UpdateFileUploadProgress(string name, double percentage, string ip);
+        public delegate void UpdateFileUploadFinished(string name, double percentage, string ip, DateTime endTime);
+
+        public event NewUpload NewUploadEventHandler;
+        public event UpdateFileUploadProgress UploadProgressEventHandler;
+        public event UpdateFileUploadFinished UploadFinishedEventHandler;
         private Configuration configuration;
         private TcpListener connListener;
         private Queue<TcpClient> connectionQueue;
@@ -93,8 +100,9 @@ namespace MiniTorrentClient.FileTransfer
                 // Translate buffer content to string and then to FileRequest object.
                 string requestString = Encoding.ASCII.GetString(readBuffer);
                 FileRequest file = JsonConvert.DeserializeObject<FileRequest>(requestString);
+                NewUploadEventHandler?.Invoke(file.Name, file.Size, tcpClient.Client.RemoteEndPoint.ToString());
                 // Upload the file to the requester
-                await UploadFile(stream, file);
+                await UploadFile(stream, file, tcpClient.Client.RemoteEndPoint.ToString());
             }
             catch (Exception e)
             {
@@ -115,7 +123,7 @@ namespace MiniTorrentClient.FileTransfer
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="fileRequest"></param>
-        private async Task UploadFile(NetworkStream stream, FileRequest fileRequest)
+        private async Task UploadFile(NetworkStream stream, FileRequest fileRequest, string ip)
         {
             // Set buffer size
             byte[] readBuffer = new byte[SizeConstants.KILOBYTE * 32];
@@ -147,8 +155,9 @@ namespace MiniTorrentClient.FileTransfer
                             await stream.WriteAsync(readBuffer, 0, countOfBytesLeft);
                             byteSent += countOfBytesLeft;
                         }
+                        UploadProgressEventHandler?.Invoke(fileRequest.Name, ((double)byteSent/(fileRequest.EndByte - fileRequest.StartByte)) * 100, ip);
                     }
-                    
+                    UploadFinishedEventHandler?.Invoke(fileRequest.Name, 100.0, ip, DateTime.Now);
                 }
                 catch (Exception e)
                 {

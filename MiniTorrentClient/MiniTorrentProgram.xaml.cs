@@ -26,13 +26,17 @@ namespace MiniTorrentClient
     public partial class MiniTorrentProgram : Window
     {
         public static object theLock = new object();
+        public static object theUploadLock = new object();
         public Configuration CurrentConfiguration { get; set; }
 
         private List<AvailableFile> AvailableFiles;
         private CollectionViewSource AvailableFileSource;
 
-        private List<DownloadingFile> DownloadingFiles;
+        private List<FileUploadDownloadProgress> DownloadingFiles;
         private CollectionViewSource DownloadingFileSource;
+
+        private List<FileUploadDownloadProgress> uploadingFiles;
+        private CollectionViewSource uploadingFileSource;
 
         private List<MyFile> OwnedFilesList;
         private UploadTask server;
@@ -56,13 +60,21 @@ namespace MiniTorrentClient
             // Initialize downloading file list
             DownloadingFileSource = (CollectionViewSource) (FindResource("DownloadingFileSource"));
             DownloadingFileSource.Source = DownloadingFiles;
-            DownloadingFiles = new List<DownloadingFile>();
+            DownloadingFiles = new List<FileUploadDownloadProgress>();
+
+            // Initialize uploading file list
+            uploadingFileSource = (CollectionViewSource) (FindResource("UploadingFileSource"));
+            uploadingFileSource.Source = uploadingFiles;
+            uploadingFiles = new List<FileUploadDownloadProgress>();
 
             UpdateOwnedFile();
             UpdateAvailableFiles();
 
             // Connection listener for upload
             server = new UploadTask(configuration);
+            server.NewUploadEventHandler += NewUpload;
+            server.UploadProgressEventHandler += UpdateUploadProgress;
+            server.UploadFinishedEventHandler += UpdateUploadFinished;
         }
         
         /// <summary>
@@ -192,6 +204,90 @@ namespace MiniTorrentClient
             return files;
         }
 
+        /// <summary>
+        /// *** New upload view initialization ***
+        /// Creates a new FileUploadDownloadProgress object.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="size"></param>
+        /// <param name="ip"></param>
+        private void NewUpload(string name, int size, string ip)
+        {
+            FileUploadDownloadProgress uploadFile = new FileUploadDownloadProgress() {Filename = name, StartedTime = DateTime.Now, Size = size, Ip = ip, Percentage = 0};
+            uploadingFiles.Add(uploadFile);
+            /* As CollectionViewSource cannot be accessed from different threads other than the UI thread,
+             * The UI refresh delegated to the dispatcher. */
+            App.Current.Dispatcher.Invoke((Action) delegate
+            {
+                uploadingFileSource.Source = null;
+                uploadingFileSource.Source = uploadingFiles;
+            });
+        }
+
+        /// <summary>
+        /// *** Update progress ***
+        /// Takes uploading file name, percentage of uploaded bytes, and destination ip address,
+        /// and updates the appropriate progress object.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="percentage"></param>
+        /// <param name="ip"></param>
+        private void UpdateUploadProgress(string name, double percentage, string ip)
+        {
+            // Get the FileUploadDownloadProgress for the updated file upload progress
+            FileUploadDownloadProgress uploadFile = GetFileUploadingByNameAndDestination(name, ip);
+
+            // Check if progress object found
+            if (uploadFile == null)
+                return;
+
+            // Update the progress bar
+            uploadFile.Percentage = percentage;
+        }
+
+        /// <summary>
+        /// *** Update upload is finished ***
+        /// Puts an end time stamp to the appropriate FileUploadDownload object.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="percentage"></param>
+        /// <param name="ip"></param>
+        /// <param name="endTime"></param>
+        private void UpdateUploadFinished(string name, double percentage, string ip, DateTime endTime)
+        {
+            // Update progress
+            UpdateUploadProgress(name, percentage, ip);
+
+            // Get the FileUploadDownloadProgress for the updated file upload progress
+            FileUploadDownloadProgress uploadFile = GetFileUploadingByNameAndDestination(name, ip);
+
+            // Check if progress object found
+            if (uploadFile == null)
+                return;
+
+            uploadFile.EndedTime = endTime;
+        }
+
+
+        /// <summary>
+        /// *** Fetch appropriate upload progress object ***
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        private FileUploadDownloadProgress GetFileUploadingByNameAndDestination(string name, string ip)
+        {
+            // iterate the list and compare file name and ip.
+            foreach(var upload in uploadingFiles)
+            {
+                if (upload.Filename == name && upload.Ip == ip)
+                {
+                    return upload;
+                }
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// *** Update download progress ***
@@ -201,7 +297,7 @@ namespace MiniTorrentClient
         /// <param name="percentage"></param>
         private void UpdateDownloadProgress(string name, double percentage)
         {
-            DownloadingFile downloadFile = GetFileDownloadingByName(name);
+            FileUploadDownloadProgress downloadFile = GetFileDownloadingByName(name);
             if (downloadFile == null)
                 return;
 
@@ -220,7 +316,7 @@ namespace MiniTorrentClient
         /// <param name="endTime"></param>
         private void UpdateDownloadFinished(string name, double percentage, DateTime endTime)
         {
-            DownloadingFile downloadFile = GetFileDownloadingByName(name);
+            FileUploadDownloadProgress downloadFile = GetFileDownloadingByName(name);
             if (downloadFile == null)
                 return;
 
@@ -239,9 +335,9 @@ namespace MiniTorrentClient
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private DownloadingFile GetFileDownloadingByName(string name)
+        private FileUploadDownloadProgress GetFileDownloadingByName(string name)
         {
-            DownloadingFile downloadFile = null;
+            FileUploadDownloadProgress downloadFile = null;
             foreach (var download in DownloadingFiles)
             {
                 if (download.Filename == name)
@@ -334,7 +430,7 @@ namespace MiniTorrentClient
             }
 
             DownloadTask download = new DownloadTask(fileToDownload, CurrentConfiguration);
-            DownloadingFile progressView = new DownloadingFile() {Filename = fileToDownload.Name, Percentage = 0, Size = fileToDownload.Size, StartedTime = DateTime.Now};
+            FileUploadDownloadProgress progressView = new FileUploadDownloadProgress() {Filename = fileToDownload.Name, Percentage = 0, Size = fileToDownload.Size, StartedTime = DateTime.Now};
             DownloadingFiles.Add(progressView);
             DownloadingFileSource.Source = null;
             DownloadingFileSource.Source = DownloadingFiles;

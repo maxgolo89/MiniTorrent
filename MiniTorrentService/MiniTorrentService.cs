@@ -28,10 +28,6 @@ namespace MiniTorrentService
         {
             if (Authenticate(req.Username, req.Password))
             {
-                foreach (var file in req.Files)
-                {
-                    Console.WriteLine(file.Value);
-                }
                 string user = db.CreateLoggedInUser(req.Username, req.IP, req.Port, req.Files);
                 if (user != null)
                 {

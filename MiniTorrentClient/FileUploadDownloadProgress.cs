@@ -3,13 +3,16 @@ using System.ComponentModel;
 
 namespace MiniTorrentClient
 {
-    public class DownloadingFile : INotifyPropertyChanged
+    public class FileUploadDownloadProgress : INotifyPropertyChanged
     {
         private double mPercentage;
         private DateTime mEndedTime;
         public string Filename { get; set; }
         public float Size { get; set; }
         public DateTime StartedTime { get; set; }
+        
+        // Use for uploading only
+        public string Ip { get; set; }
 
         /// <summary>
         /// *** Getter and Setter ***
