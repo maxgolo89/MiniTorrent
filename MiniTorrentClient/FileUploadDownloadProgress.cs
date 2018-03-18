@@ -8,7 +8,7 @@ namespace MiniTorrentClient
         private double mPercentage;
         private DateTime mEndedTime;
         public string Filename { get; set; }
-        public float Size { get; set; }
+        public int Size { get; set; }
         public DateTime StartedTime { get; set; }
         
         // Use for uploading only
